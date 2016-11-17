@@ -1,0 +1,19 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: localhost
+  username: pguser
+  password: fiend
+  pool: 5
+
+development:
+  <<: *default
+  database: db/rra_development
+
+test:
+  <<: *default
+  database: db/rra_test
+
+production:
+  <<: *default
+  database: db/rra_production
