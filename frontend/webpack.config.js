@@ -42,7 +42,8 @@ const config = {
         loader: 'babel-loader',
         exclude: /node_modules/,
       },
-      { test: /\.css$/, loader: 'style!css' },
+      { test: /\.scss$/, loader: 'style!css!sass!' },
+      { test: /\.png$/, loader: "url-loader?mimetype=image/png" },
     ],
   },
 };

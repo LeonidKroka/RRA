@@ -1,9 +1,23 @@
 class UsersController < ApplicationController
   def new
-    @user = User.new()
+    if logged?
+      @data = {id: current_user.id.to_s, current_user: current_user} if logged?
+    else
+     @data = {id: '0', current_user: User.new()}
+   end
   end
 
   def create
+    @user = User.new(user_params)
+
+    if @user.save
+      log_in @user
+      UserMailer.account_activation(@user).deliver_now
+    else
+      respond_to do |format|
+        format.json do render :json => {status: false, errors: @user.errors.full_messages} end
+      end
+    end
   end
 
   def show
@@ -57,7 +71,7 @@ class UsersController < ApplicationController
 
   private
     def user_params
-      params.require(:user).permit(:name, :surname, :gender, :email, :password, :password_confirmation)
+      params.permit(:name, :surname, :gender, :email, :password, :password_confirmation)
     end
 
     def friend_relation_params
@@ -71,9 +85,5 @@ class UsersController < ApplicationController
         :email => 'true_email@exemple.com',
         :password => 'Validpass1',
         :password_confirmation => 'Validpass1' }
-    end
-
-    def correct_user
-      redirect_to root_path unless (current_user == User.find_by(id: params[:id]))
     end
 end
