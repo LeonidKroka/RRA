@@ -7,11 +7,14 @@ class PostsController < ApplicationController
   end
 
   def create
+    user = User.find_by(id: params[:user_id])
+    user.posts.create(post_params)
+    posts user
   end
 
   def destroy
-    @user = User.find_by(id: params[:user_id])
-    @user.posts.find_by(id: params[:id]).destroy
+    current_user.posts.find_by(id: params[:id]).destroy
+    posts current_user
   end
 
   def index
@@ -33,7 +36,7 @@ class PostsController < ApplicationController
 
   private
     def post_params
-      params.require(:post).permit(:text)
+      params.permit(:text)
     end
 
     def image_params

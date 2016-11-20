@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   def new
     if logged?
-      @data = {id: current_user.id.to_s, current_user: current_user} if logged?
+      @data = {id: current_user.id.to_s, data: data(current_user)} if logged?
     else
      @data = {id: '0', current_user: User.new()}
    end

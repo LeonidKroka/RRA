@@ -6,12 +6,60 @@ module UsersHelper
     nil
   end
 
-  def get_ico user
-    user.images.order('id DESC').all.each {|img| return img.image.thumb.url if img.avatar}
+  def data(user)
+    comments = response_comment user
+    posts = user.posts.last(10+params[:post].to_i).reverse.map do |post|
+      {post: post,
+       img: if !Image.find_by(post_id: post.id).nil?
+              Image.find_by(post_id: post.id).image.post.url
+            else ''
+            end }
+    end
+    {:user => user,
+     :avatar => (get_avatar user),
+     :posts => posts,
+     :comments => comments,
+     :friends => (get_nine_friends user),
+     :current_id => current_user.id,
+     :statistics => {:posts => user.posts.count,
+                     :images => user.images.count,
+                     :comments => user.comments.count,
+                     :friends => user.friends.count}}
+  end
+
+  def posts user
+    posts = user.posts.last(10+params[:post].to_i).reverse.map do |post|
+      {post: post,
+       img: if !Image.find_by(post_id: post.id).nil?
+              Image.find_by(post_id: post.id).image.post.url
+            else ''
+            end }
+    end
+    comments = response_comment user
+    respond_to do |format|
+      format.json do render :json => {:status => true, :posts => posts, :comments => comments} end
+    end
+  end
+
+  def build_comments comments
+    comments.map do |comment|
+      {user: User.find_by(id: comment.user_id),
+       comment: comment,
+       avatar: (get_avatar User.find_by(id: comment.user_id))}
+    end
+  end
+
+  def response_comment user
+    user.posts.last(10).reverse.map do |post|
+      (build_comments post.comments)||[[]]
+    end
   end
 
   def get_nine_friends user
-    user.all_friends.count < 10 ? user.all_friends : user.all_friends.limit(9)
+    (user.all_friends.count < 10 ? user.all_friends : user.all_friends.limit(9)).map do |friend|
+      {avatar: (get_avatar friend),
+       user: friend}
+    end
   end
 
   def is_friend? user

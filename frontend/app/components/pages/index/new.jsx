@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import './style.scss'
 
-import NewUser from '../user/new';
+import NewUser from '../resources/user/new';
 require("url-loader?mimetype=image/png!./title.png");
 require("url-loader?mimetype=image/png!./title2.png");
 
