@@ -50,7 +50,7 @@ export default class Profile extends React.Component{
         </div>
         <div className="profile-activity">
           < UserInfo user={this.state.data.user} statistics={this.state.data.statistics} />
-          < NewPost id={this.state.data.user.id}
+          < NewPost id={this.props.id}
                     addContactPosts={this.addContactGetPosts}
                     addContactComments={this.addContactGetComments} />
           {this.state.posts.map(function(post, index){

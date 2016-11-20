@@ -16,6 +16,10 @@ export default class Dropdown extends React.Component {
     this.props.addContactId('0')
     this.props.addContactPage('login')
   }
+  editClick = (event) => {
+    this.props.addContactPage('edit')
+  }
+
   render() {
     return (
       <li className="dropdown">
@@ -25,7 +29,7 @@ export default class Dropdown extends React.Component {
         </p>
         <div className="dropdown-up" style={{display: (this.state.disabled? "block" : "none")}}></div>
         <ul className="dropdown-menu" style={{display: (this.state.disabled? "block" : "none")}}>
-          <a href={"/users/"+this.props.id+"/edit"} data-remote="true">
+          <a onClick={this.editClick}>
             <li>Edit profile</li>
           </a>
           <a href={"/logout"} data-method="delete" data-remote="true" onClick={this.logOutClick}>

@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react';
-import './post.scss'
+import './edit_user.scss'
 
 export default class EditUser extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {name: '',
-                  surname: '',
+    this.state = {name: this.props.user.name,
+                  surname: this.props.user.surname,
                   old_password: '',
                   password: '',
                   password_confirmation: ''};
@@ -17,12 +17,13 @@ export default class EditUser extends React.Component {
   handleName = (event) => {
     event.preventDefault();
     $.ajax({
-      type: "POST",
-      url: '/users/'+this.props.id+'/edit',
+      type: "PATCH",
+      url: '/users/'+this.props.id,
       data: {'name': this.state.name,
              'surname': this.state.surname},
       success: (response) => {
-        response.status==true ? this.props.addContactEdit(response.edit)) : ''
+        if (response.status) {this.props.addContactData(response.data);
+                              this.props.addContactPage('profile')}
       },
     })
   }
@@ -35,7 +36,8 @@ export default class EditUser extends React.Component {
              'password': this.state.password,
              'password_confirmation': this.state.assword_confirmation},
       success: (response) => {
-        response.status==true ? this.props.addContactEdit(response.edit)) : ''
+        if (response.status) {this.props.addContactData(response.data);
+                              this.props.addContactPage('profile')}
       },
     })
   }
@@ -46,12 +48,12 @@ export default class EditUser extends React.Component {
         <div className="nav-name-content">
           <h1>Chang your name</h1>
           <form data-remote="true">
-            <input value={this.props.user.name}
+            <input defaultValue={this.props.user.name}
                    type="text"
                    onChange={this.fieldChange.bind(this, 'name')}
                    id="user_name" /><br/>
 
-            <input value={this.props.user.surname}
+            <input defaultValue={this.props.user.surname}
                    type="text"
                    onChange={this.fieldChange.bind(this, 'surname')} /><br/>
 

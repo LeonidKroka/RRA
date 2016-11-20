@@ -30,9 +30,24 @@ class UsersController < ApplicationController
   end
 
   def update
+    @user = current_user
+    if User.new(validation_hash).valid?
+      @user.update_attribute(:name, params[:name])
+      @user.update_attribute(:surname, params[:surname])
+    end
+    respond_to do |format|
+      format.json do render :json => {status: true, data: data(current_user)} end
+    end
   end
 
   def edit_pass
+    @user = current_user
+    @user.authenticated?(:password, params[:old_password])
+    @user.update_attributes(:password => params[:password],
+                            :password_confirmation => params[:password_confirmation])
+    respond_to do |format|
+      format.json do render :json => {status: true, data: data(current_user)} end
+    end
   end
 
   def account_activation
@@ -86,8 +101,8 @@ class UsersController < ApplicationController
     end
 
     def validation_hash
-      { :name => params[:user][:name],
-        :surname => params[:user][:surname],
+      { :name => params[:name],
+        :surname => params[:surname],
         :gender => 'male',
         :email => 'true_email@exemple.com',
         :password => 'Validpass1',

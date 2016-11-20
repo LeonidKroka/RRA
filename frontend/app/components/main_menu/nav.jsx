@@ -7,8 +7,28 @@ export default class Nav extends React.Component {
       type: "GET",
       url: url,
       success: (response) => {
-        if (response.status) { this.props.addContactPage(location),
-                               this.props.addContactData(response.data)}
+        if (response.status) { this.props.addContactPage(location);
+                               this.props.addContactData(response.data);}
+      },
+    })
+  }
+  navNewsChange = (url, location, event) => {
+    $.ajax({
+      type: "GET",
+      url: url,
+      success: (response) => {
+        if (response.status) { this.props.addContactNewsData(response.data);
+                               this.props.addContactPage(location);}
+      },
+    })
+  }
+  navFriendsChange = (url, location, event) => {
+    $.ajax({
+      type: "GET",
+      url: url,
+      success: (response) => {
+        if (response.status) { this.props.addContactFriendsData(response.data);
+                               this.props.addContactPage(location);}
       },
     })
   }
@@ -23,10 +43,10 @@ export default class Nav extends React.Component {
           <a onClick={this.navChange.bind(this, "/users/"+this.props.id+"/messages", 'message')}>
             <li>Messages</li>
           </a>
-          <a onClick={this.navChange.bind(this, "/users/"+this.props.id+"/posts", 'news')}>
+          <a onClick={this.navNewsChange.bind(this, "/users/"+this.props.id+"/posts", 'news')}>
             <li>News</li>
           </a>
-          <a onClick={this.navChange.bind(this, "/users/"+this.props.id+"/friends", 'friends')}>
+          <a onClick={this.navFriendsChange.bind(this, "/users/"+this.props.id+"/friends", 'friends')}>
             <li>Friends</li>
           </a>
           <a onClick={this.navChange.bind(this, "/users/"+this.props.id+"/images", 'image')}>
