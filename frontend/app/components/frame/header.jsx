@@ -17,7 +17,8 @@ export default class Header extends React.Component {
           <ul className="header-nav">
             {this.props.id=='0' ? < Reload /> : < Dropdown id={this.props.id}
                                                            surname={this.props.current_user.surname}
-                                                           addContactId={this.props.addContactId} />}
+                                                           addContactId={this.props.addContactId}
+                                                           addContactPage={this.props.addContactPage} />}
           </ul>
         </nav>
       </div>

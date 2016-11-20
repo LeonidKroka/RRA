@@ -3,7 +3,7 @@ class UsersController < ApplicationController
     if logged?
       @data = {id: current_user.id.to_s, data: data(current_user)} if logged?
     else
-     @data = {id: '0', current_user: User.new()}
+     @data = {id: '0', data: {current_user: User.new()}}
    end
   end
 
@@ -21,6 +21,9 @@ class UsersController < ApplicationController
   end
 
   def show
+    respond_to do |format|
+      format.json do render :json => {status: true, data: data(User.find_by(id: params[:id]))} end
+    end
   end
 
   def edit
@@ -53,8 +56,12 @@ class UsersController < ApplicationController
   end
 
   def friends
-    @user = User.find_by(id: (params[:id]||current_user.id))
-    @friends = @user.all_friends
+    user = User.find_by(id: (params[:id]||current_user.id))
+    friends = user.all_friends.map {|friend| {user: friend,
+                                                  avatar: (get_avatar friend)}}
+    respond_to do |format|
+      format.json do render :json => {status: true, data: {friends: friends}} end
+    end
   end
 
   def create_friend

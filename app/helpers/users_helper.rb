@@ -8,7 +8,7 @@ module UsersHelper
 
   def data(user)
     comments = response_comment user
-    posts = user.posts.last(10+params[:post].to_i).reverse.map do |post|
+    posts = Post.where('CAST(user_id AS text) LIKE ?', user.id.to_s).reverse.map do |post|
       {post: post,
        img: if !Image.find_by(post_id: post.id).nil?
               Image.find_by(post_id: post.id).image.post.url
@@ -50,7 +50,7 @@ module UsersHelper
   end
 
   def response_comment user
-    user.posts.last(10).reverse.map do |post|
+    Post.where('CAST(user_id AS text) LIKE ?', user.id.to_s).last(10).reverse.map do |post|
       (build_comments post.comments)||[[]]
     end
   end
@@ -74,27 +74,15 @@ module UsersHelper
     Comment.where('CAST(post_id AS text) LIKE ?', post.id.to_s)
   end
 
-  def author comment
-    User.find_by(id: comment.user_id)
-  end
-
-  def creator post
-    User.find_by(id: post.user_id)
-  end
-
   def news
     friend_ids = current_user.friends.map {|men| men.id} + current_user.inverse_friends.map {|men| men.id}
-    Post.where('CAST(user_id AS INT) IN (?)', friend_ids)
-  end
-
-  def new_images
-    friend_ids = current_user.friends.map {|men| men.id} + current_user.inverse_friends.map {|men| men.id}
-    Image.where('CAST(user_id AS INT) IN (?)', friend_ids)
-  end
-
-  def get_utube text
-    url = URI.extract(text)
-    url[0] if !(url.count==0)
+    posts = Post.where('CAST(user_id AS INT) IN (?)', friend_ids).last(20)
+    posts = posts.map {|post| {post: post,
+                               src: (!Image.find_by(post_id: post.id).nil? ? Image.find_by(post_id: post.id).image.post.url : ''),
+                               user_id: User.find_by(id: post.user_id).id,
+                               user_name: User.find_by(id: post.user_id).name+' '+User.find_by(id: post.user_id).surname,
+                               img: (get_avatar User.find_by(id: post.user.id))}}
+    posts
   end
 
   def get_user msg

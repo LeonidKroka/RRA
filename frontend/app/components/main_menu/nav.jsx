@@ -2,23 +2,34 @@ import React, { PropTypes } from 'react';
 import './style.scss'
 
 export default class Nav extends React.Component {
+  navChange = (url, location, event) => {
+    $.ajax({
+      type: "GET",
+      url: url,
+      success: (response) => {
+        if (response.status) { this.props.addContactPage(location),
+                               this.props.addContactData(response.data)}
+      },
+    })
+  }
+
   render() {
     return (
       <div className="main-menu">
         <ul>
-          <a href={"/users/"+this.props.id} data-remote="true">
+          <a onClick={this.navChange.bind(this, "/users/"+this.props.id, 'profile')}>
             <li>Profile</li>
           </a>
-          <a href={"/users/"+this.props.id+"/messages"} data-remote="true">
+          <a onClick={this.navChange.bind(this, "/users/"+this.props.id+"/messages", 'message')}>
             <li>Messages</li>
           </a>
-          <a href={"/users/"+this.props.id+"/posts"} data-remote="true">
+          <a onClick={this.navChange.bind(this, "/users/"+this.props.id+"/posts", 'news')}>
             <li>News</li>
           </a>
-          <a href={"/users/"+this.props.id+"/friends"} data-remote="true">
+          <a onClick={this.navChange.bind(this, "/users/"+this.props.id+"/friends", 'friends')}>
             <li>Friends</li>
           </a>
-          <a href={"/users/"+this.props.id+"/images"} data-remote="true">
+          <a onClick={this.navChange.bind(this, "/users/"+this.props.id+"/images", 'image')}>
             <li>Gallery</li>
           </a>
         </ul>

@@ -7,6 +7,8 @@ import GoUp from '../components/up/go_up';
 import Nav from '../components/main_menu/nav';
 import Home from '../components/pages/index/new';
 import Profile from '../components/pages/profile/profile';
+import News from '../components/pages/news/posts';
+import Friends from '../components/pages/friends/friends';
 
 import './style.scss'
 
@@ -25,27 +27,46 @@ export default class SPAView extends React.Component{
     this.setState({id: contact});
   }
   addContactGetPage=(contact) => {
-    this.setState({nav: contact})
+    this.setState({nav: contact});
   }
 
   render() {
     return (
       <div>
-        < Header id={this.state.id} current_user={this.state.data.user} addContactId={ this.addContactGetId } />
+        < Header id={this.state.id}
+                 current_user={this.props.data.user}
+                 addContactId={ this.addContactGetId}
+                 addContactPage={this.addContactGetPage} />
         <div className="main-content">
           < GoUp />
           <div className="content">
             <div className="menu">
               {this.state.id=='0'? < Login addContactData={ this.addContactGetData }
-                                           addContactId={ this.addContactGetId } /> : < Nav id={this.state.id} />}
+                                           addContactId={ this.addContactGetId }
+                                           addContactPage={this.addContactGetPage} /> : < Nav id={this.state.id}
+                                                                                            addContactPage={this.addContactGetPage}
+                                                                                            addContactData={this.addContactGetData}/>}
             </div>
             <div className="yield_pages">
               {(() => {
                         switch (this.state.nav) {
                           case 'login':
-                            return < Login />
+                            return < Home />
                           case 'profile':
-                            return < Profile id={this.state.id} data={this.state.data} />
+                            return < Profile id={this.state.id}
+                                             data={this.state.data}
+                                             addContactPage={this.addContactGetPage}
+                                             addContactData={this.addContactGetData} />
+
+                          case 'news':
+                            return < News    id={this.state.id}
+                                             data={this.state.data} />
+
+                          case 'friends':
+                            return < Friends friends={this.state.data.friends}
+                                             addContactPage={this.addContactGetPage}
+                                             addContactData={this.addContactGetData} />
+
                           default :
                             null
                       }

@@ -14,6 +14,7 @@ export default class Dropdown extends React.Component {
   }
   logOutClick = (event) => {
     this.props.addContactId('0')
+    this.props.addContactPage('login')
   }
   render() {
     return (

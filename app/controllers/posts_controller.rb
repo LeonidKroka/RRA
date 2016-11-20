@@ -18,6 +18,9 @@ class PostsController < ApplicationController
   end
 
   def index
+    respond_to do |format|
+      format.json do render :json => {status: true, data: {posts: news}} end
+    end
   end
 
   def like

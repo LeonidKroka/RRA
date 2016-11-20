@@ -29,7 +29,8 @@ export default class Login extends React.Component {
              'remember_me': (this.state.checked? '1' : '0')},
       success: (response) => {
         response.status==true ? this.props.addContactData(response.data) : this.setState({error: "Invalid email/password"})
-        response.status==true ? this.props.addContactId(String(response.data.current_id)) : ''
+        if (response.status==true) {this.props.addContactId(String(response.data.current_id))
+                                    this.props.addContactPage('profile');}
       },
     })
   }

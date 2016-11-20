@@ -14,9 +14,15 @@ export default class Profile extends React.Component{
   constructor(props) {
     super(props);
     this.state = {posts: this.props.data.posts,
-                  comments: this.props.data.comments};
+                  comments: this.props.data.comments,
+                  data: this.props.data};
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({posts: nextProps.data.posts})
+    this.setState({comments: nextProps.data.comments})
+    this.setState({data: nextProps.data});
+  }
   addContactGetPosts=(contact) => {
     this.setState({posts: contact})
   }
@@ -32,22 +38,26 @@ export default class Profile extends React.Component{
           <hr />
           <div className="friends">
             <p className="friends-h1">Friends<a>Show all</a></p>
-            {(this.props.data.friends==undefined? [] : this.props.data.friends).map(function(friend, index) {
+            {(this.state.data.friends==undefined? [] : this.state.data.friends).map(function(friend, index) {
               return (
-                < AvatarIco user={friend.user} img={friend.avatar} key={index} /> )}, this)}
+                < AvatarIco user={friend.user}
+                            img={friend.avatar}
+                            key={index}
+                            addContactPage={this.props.addContactPage}
+                            addContactData={this.props.addContactData} /> )}, this)}
           </div>
           <hr />
         </div>
         <div className="profile-activity">
-          < UserInfo user={this.props.data.user} statistics={this.props.data.statistics} />
-          < NewPost id={this.props.data.user.id}
+          < UserInfo user={this.state.data.user} statistics={this.state.data.statistics} />
+          < NewPost id={this.state.data.user.id}
                     addContactPosts={this.addContactGetPosts}
                     addContactComments={this.addContactGetComments} />
           {this.state.posts.map(function(post, index){
             return (
               <div key={(new Date()).getTime()+100*index}>
-                < Post author={this.props.data.user}
-                               img={this.props.data.avatar}
+                < Post author={this.state.data.user}
+                               img={this.state.data.avatar}
                                current={this.props.id==post.post.user_id}
                                src={post.img}
                                post={post.post}
