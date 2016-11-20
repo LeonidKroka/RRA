@@ -34,7 +34,7 @@ export default class NewPost extends React.Component {
 
   render() {
     return (
-      <div className="NewPost">
+      <div className="NewPost" style={{display: (this.props.user_id==this.props.id? "block" : "none")}}>
         <div className="to-create-post" style={{display: (this.state.show? "none" : "block")}}>
           <button className="new-post" onClick={this.handleShow}>Write your new post</button>
         </div>

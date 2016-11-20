@@ -10,6 +10,7 @@ import Profile from '../components/pages/profile/profile';
 import News from '../components/pages/news/posts';
 import Friends from '../components/pages/friends/friends';
 import EditUser from '../components/pages/resources/forms/edit_user';
+import Gallery from '../components/pages/gallery/show';
 
 import './style.scss'
 
@@ -19,6 +20,7 @@ export default class SPAView extends React.Component{
     this.state = {data: this.props.data,
                   newsData: {},
                   friendsData: {},
+                  imgData: {},
                   id: this.props.id,
                   nav: (this.props.id=='0'? 'login' : 'profile')};
   }
@@ -34,6 +36,9 @@ export default class SPAView extends React.Component{
   }
   addContactGetFriendsData=(contact) =>{
     this.setState({friendsData: contact});
+  }
+  addContactGetImgData=(contact) =>{
+    this.setState({imgData: contact});
   }
   addContactGetId=(contact) =>{
     this.setState({id: contact});
@@ -54,13 +59,20 @@ export default class SPAView extends React.Component{
           <div className="content">
             <div className="menu">
 
-              {this.state.id=='0'? < Login addContactData={ this.addContactGetData }
-                                           addContactId={ this.addContactGetId }
-                                           addContactPage={this.addContactGetPage} /> : < Nav id={this.state.id}
-                                                                                            addContactPage={this.addContactGetPage}
-                                                                                            addContactData={this.addContactGetData}
-                                                                                            addContactNewsData={this.addContactGetNewsData}
-                                                                                            addContactFriendsData={this.addContactGetFriendsData}/>}
+              {this.state.id=='0'?
+
+                        < Login addContactData={ this.addContactGetData }
+                                addContactId={ this.addContactGetId }
+                                addContactPage={this.addContactGetPage} /> :
+
+                                                    < Nav id={this.state.id}
+                                                          addContactPage={this.addContactGetPage}
+                                                          addContactData={this.addContactGetData}
+                                                          addContactNewsData={this.addContactGetNewsData}
+                                                          addContactFriendsData={this.addContactGetFriendsData}
+                                                          addContactImgData={this.addContactGetImgData} />}
+
+
             </div>
 
             <div className="yield_pages">
@@ -88,6 +100,9 @@ export default class SPAView extends React.Component{
                                              id={this.props.id}
                                              addContactPage={this.addContactGetPage}
                                              addContactData={this.addContactGetData} />
+
+                          case 'gallery':
+                            return < Gallery images={this.state.imgData} />
 
                           default :
                             null

@@ -20,6 +20,7 @@ module UsersHelper
      :posts => posts,
      :comments => comments,
      :friends => (get_nine_friends user),
+     :user_id => user.id,
      :current_id => current_user.id,
      :statistics => {:posts => user.posts.count,
                      :images => user.images.count,

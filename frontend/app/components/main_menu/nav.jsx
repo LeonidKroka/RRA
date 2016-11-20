@@ -32,6 +32,16 @@ export default class Nav extends React.Component {
       },
     })
   }
+  navImgChange = (url, location, event) => {
+    $.ajax({
+      type: "GET",
+      url: url,
+      success: (response) => {
+        if (response.status) { this.props.addContactImgData(response.data);
+                               this.props.addContactPage(location);}
+      },
+    })
+  }
 
   render() {
     return (
@@ -49,7 +59,7 @@ export default class Nav extends React.Component {
           <a onClick={this.navFriendsChange.bind(this, "/users/"+this.props.id+"/friends", 'friends')}>
             <li>Friends</li>
           </a>
-          <a onClick={this.navChange.bind(this, "/users/"+this.props.id+"/images", 'image')}>
+          <a onClick={this.navImgChange.bind(this, "/users/"+this.props.id+"/images", 'gallery')}>
             <li>Gallery</li>
           </a>
         </ul>
